@@ -2,6 +2,15 @@
   'use strict';
 
   $(document).ready(function(){
-    $('body').prepend(JST['application']());
+    $('.login-form').on('submit', function(event){
+      event.prevetDefault();
+      window.location.hash = '/chat';
+    });
+
+    $(window).on('hashchange',function(event){
+      event.preventDefault();
+      console.log(sindow.location.hash);
+
+    });
   });
 })();
