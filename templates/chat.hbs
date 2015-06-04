@@ -3,10 +3,14 @@
 <ul>
     <li>
 
-      {{username}}
-      {{created_at}}
-      {{content}}
+    <h3> {{username}} </h3>
+    <h6>  {{created_at}} </h6>
+      <p>{{content}}</p>
 
     </li>
 </ul>
 {{/each}}
+<section class = 'create a message'>
+<h4>Say something</h4>
+<textarea class="type-message" name="Name" rows="8" cols="40"></textarea>     <input class ="send-message" type="submit" value="send message">
+</section>

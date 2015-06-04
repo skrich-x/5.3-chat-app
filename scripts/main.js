@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  var username = '';
+  var username = localStorage.getItem('username');
 
 
   $(document).ready(function(){
@@ -11,6 +11,7 @@
     $(document).on('submit', '.login-form', function(event) {
       event.preventDefault();
       username = $(this).find('.login-form-username').val();
+      localStorage.setItem('username', username);
       window.location.hash = '/chat';
     });
 
@@ -51,26 +52,31 @@
   }
 
   function renderChat(data){
-
+    $('.application').html(JST['chat']());
     console.log('username:', username);
     var fetchedData = fetchMessages(data);
     console.log(fetchedData);
     displayChats(fetchedData);
-    }
 
-  function addMessage(){
-    console.log('addMessage');
-    var messages = [{
-    username: "person",
-    created_at:new Date(),
-    content: stuff
-  }];
-}
-  // $.ajax({
-  //       type: 'POST',
-  //       url: "http://tiny-lasagna-server.herokuapp.com/collections/messages/",
-  //       data: messages,
-  //     });
+    $.ajax({
+   url:"http://tiny-lasagna-server.herokuapp.com/collections/messages/",
+   type: "POST",
+   data: {
+     username: "kyle",
+     created_at: new Date(),
+     content: ""
+    }
+  }
+)};
+  // $(document).on('submit', '.type-message', function(event){
+  //     event.preventDefault();
+    //   $.ajax({
+    //      url: "http://tiny-lasagna-server.herokuapp.com/collections/messages/",
+    //      type: 'POST',
+    //      username: "kyle",
+    //      created_at: new Date(),
+    //    });
+    //  });
 
   function fetchMessages(data) {
     console.log("fetch");
