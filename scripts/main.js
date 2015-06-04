@@ -1,62 +1,83 @@
 (function(){
   'use strict';
 
-  //http://tiny-lasagna-server.herokuapp.com/
-
   var username = '';
-
 
 
   $(document).ready(function(){
 
-    route();
+    routeUser();
 
-    $(document).on('submit', '.login-form', function(event){
+    $(document).on('submit', '.login-form', function(event) {
       event.preventDefault();
-      username = ($(this).find('.login-form-username').val());
+      username = $(this).find('.login-form-username').val();
       window.location.hash = '/chat';
     });
 
-    $(window).on('hashchange',function(event){
-      event.preventDefault();
-      route();
+    $(document).on('submit', '.message-form', function(event) {
+      var messageText;
 
+      event.preventDefault();
+      messageText = $(this).find('.message-form-textarea').val();
+      addMessage(messageText);
     });
+
+    $(window).on('hashchange', function(event) {
+        routeUser();
+    });
+
   });
 
-  function route(){
-    switch(window.location.hash){
-    case'':
-      $('.login').html(JST['login']());
-      break;
-    case '#/chat':
-      renderChat();
-      break;
+  function routeUser() {
+    switch(window.location.hash) {
+      case '':
+        renderLogin();
+        break;
+      case '#/chat':
+        renderChat();
+        break;
     }
   }
 
+  function renderLogin() {
+    $('.application').html(JST['login']());
+  }
 
-function renderChat(){
-  $('.application').html(JST['chat']());
+
+  function displayChats(data){
+    $('.application').html(JST['chat'](data));
+    console.log(data);
+
+  }
+
+  function renderChat(data){
+
     console.log('username:', username);
-    $.ajax({
-     url:  "http://tiny-lasagna-server.herokuapp.com/collections/messages",
-  }).then(function(messages){
-    $('.chat').html(JST['chat'](messages));
-    console.log(messages);
-  });
+    var fetchedData = fetchMessages(data);
+    console.log(fetchedData);
+    displayChats(fetchedData);
+    }
+
+  function addMessage(){
+    console.log('addMessage');
+    var messages = [{
+    username: "person",
+    created_at:new Date(),
+    content: stuff
+  }];
 }
-//    $.ajax({
-//    url:"http://tiny-lasagna-server.herokuapp.com/collections/messages/",
-//    type: "POST",
-//    data: {
-//      username: "kyle",
-//      created_at: new Date(),
-//      content: "public failure."
-//    }
-//
-//
-// });
+  // $.ajax({
+  //       type: 'POST',
+  //       url: "http://tiny-lasagna-server.herokuapp.com/collections/messages/",
+  //       data: messages,
+  //     });
 
+  function fetchMessages(data) {
+    console.log("fetch");
+    var dataToBeReturned;
+    $.ajax({
+      url: "http://tiny-lasagna-server.herokuapp.com/collections/messages/"
+    }).then(displayChats);
 
+  }
 })();
